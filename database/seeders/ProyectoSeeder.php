@@ -21,7 +21,7 @@ class ProyectoSeeder extends Seeder
                 'titulo' => 'NVN Webdesing', 
                 'descripcion' => 'Landing page de un estudio de Diseño Web',
                 'url' => 'https://nvnwebdesing.com',
-                'imagen' => 'https://res.cloudinary.com/dkoocayxp/image/upload/v1712836772/portfolio/estudioCasa_dgszsj.png',
+                'imagen' => 'https://res.cloudinary.com/dkoocayxp/image/upload/v1724169848/portfolio/nvnwebdesing_edmuks.jpg',
                 'github' => 'https://github.com/mlmh3113/nvnwebdesing.git',
                 'tecnologias' => json_encode(['Laravel', 'Vue.js', 'Tailwind', 'PHP', 'MySQL', 'Git', 'Inertia'])
             ]

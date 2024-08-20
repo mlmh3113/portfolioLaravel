@@ -59,71 +59,39 @@
                 </div>
             </div>
 
-            <form @submit.prevent="submit" class="flex flex-col my-5  mx-auto p-5 gap-3 rounded place-self-center w-96">
-                
-                <div>
-                    
-        
-                    <TextInput
-                    
-                        id="name"
-                        type="text"
-                        class="mt-1 block w-full "
-                        v-model="form.name"
-                        required
-                      
-                        autocomplete="name"
-                        placeholder="Nombre"
-                    />
-        
-                    <InputError class="mt-2" :message="form.errors.name" />
-                </div>
-                <div>
-                   
-        
-                    <TextInput
-                        id="email"
-                        type="text"
-                        class="mt-1 block w-full"
-                        v-model="form.email"
-                        required
-                        autocomplete="email" 
-                        placeholder="Correo electronico"  
-                    />
-        
-                    <InputError class="mt-2" :message="form.errors.email" />
-                </div>
-        
-                <div class=" mt-2">
-                    
-        
+            <form ref="form" class="flex flex-col my-5  mx-auto p-5 gap-3 rounded place-self-center w-96"
+                :class="isDark ? 'bg-slate-800 shadow-blue-900/30' : 'shadow-xl'" @submit.prevent="sendEmail">
 
-                   
-        
-                    <TextArea
-                        id="msg"
-                        class="mt-1 block w-full text-black"
-                        v-model="form.msg"
-                        required
-                        rows="5"
-                        autocomplete="msg"
-                        name="msg"
-                        placeholder="Mensaje"
-                    />
-        
-        
-                    <InputError class="mt-2" :message="form.errors.msg" />
+                <div class="flex flex-col w-full ">
+                    <label class="block" for="user_name">Nombre:</label>
+                    <input
+                        class="w-full text-black mt-1 border border-sky-900 py-2 px-3 rounded-md focus-within:outline-none select-none"
+                        id="user_name" v-model="formData.user_name" placeholder="Nombre" type="text" name="user_name">
+                        <span v-for="error in v$.user_name.$errors" :key="error.$uid" class="text-red-500 text-sm mt-1">{{ error.$message == "Value is required"? "El nombre es requerido": error.$message  }}</span>
+                    </div>
+                <div class="flex flex-col w-full ">
+                    <label class="block" for="user_email">Correo:</label>
+                    <input
+                        class="w-full text-black mt-1 border border-sky-900 py-2 px-3 rounded-md focus-within:outline-none select-none"
+                        id="user_email" v-model="formData.user_email" placeholder="Correo" type="text" name="user_email">
+                        <span v-for="error in v$.user_email.$errors" :key="error.$uid" class="text-red-500 text-sm mt-1">{{ error.$message == "Value is required"? "El mail es requerido": error.$message == "Value is not a valid email address"? "El correo no es valido": error.$message }}</span>
+               
+                    </div>
+                <div class="flex flex-col w-full ">
+                    <label class="block" for="message">Mensaje:</label>
+                    <textarea class="rounded text-black resize-none h-52 mt-1 border border-sky-900" v-model="formData.message"
+                        name="message" id="message" cols="30" rows="10"></textarea>
+                        <span v-for="error in v$.message.$errors" :key="error.$uid" class="text-red-500 text-sm mt-1">{{ error.$message == "Value is required"? "El mensaje es requerido": error.$message }}</span>
                 </div>
-        
-                <div class="flex items-center justify-end mt-4">
-                    <button
-                        class="inline-block rounded bg-gradient-to-r from-green-400 to-blue-500 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500">
-                        Enviar
-                    </button>
-                </div>
-                </form>
-        
 
+                <p v-if="mensaje" class="rounded text-white bg-emerald-500 mt-1 text-center">{{ mensaje }}</p>
+
+
+                <div>
+                    <button type="submit" class="w-full btn cursor-pointer text-white text-sm h-10 mt-1 hover:scale-105 transition
+                bg-gradient-to-r from-green-400 to-blue-500">Enviar</button>
+                </div>
+            </form>
 
 
 
@@ -133,16 +101,11 @@
 </template>
 
 <script setup>
+
+import emailjs from '@emailjs/browser';
 import { ref, reactive, computed } from 'vue'
-import InputError from '@/Components/InputError.vue';
-import TextInput from '@/Components/TextInput.vue';
-import TextArea from '@/Components/TextArea.vue'; 
-import { useForm } from '@inertiajs/vue3';
-import 'sweetalert2/dist/sweetalert2.min.css';
-import Swal from "sweetalert2";
-
-
-
+import useVuelidate from '@vuelidate/core'
+import { required, email } from '@vuelidate/validators'
 
 const emit = defineEmits([
     'darkMode'
@@ -158,25 +121,49 @@ const isDark = computed(() => {
     return props.dark;
 })
 
-const form = useForm({
-    name: '',
-    email: '',
-    msg: ''  
-});
 
-const submit = () => {
-    form.post(route('send',form), {
-        onSuccess: () => {
-            Swal.fire({
-                
-                icon: 'success',
-                title: 'Tu mensaje ha sido enviado',
-                showConfirmButton: false,
-                timer: 1500
+
+const formData = reactive({
+    user_name: '',
+    message: '',
+    user_email: '',
+})
+
+const rules = {
+    user_name: { required },
+    message: { required },
+    user_email: { required, email },
+}
+
+const v$ = useVuelidate(rules, formData)
+
+const mensaje = ref('')
+const form = ref()
+
+const sendEmail = async () => {
+    const isValid = await v$.value.$validate()
+    if (isValid) {
+        emailjs.sendForm('service_gzh580i', 'template_dftkgli', form.value, 'XFiP0z73yV6l3viAI')
+            .then(() => {
+                formData.user_name = ''
+                formData.message = ''
+                formData.user_email = ''
+                v$.value.$reset()
+                mensaje.value = 'Gracias por contactarte'
+
+                setTimeout(() => {
+                    mensaje.value = ''
+                }, 3000)
+
+            }, (error) => {
+                console.log('FAILED...', error);
+                mensaje.value = 'Hubo un error al enviar el email'
+                setTimeout(() => {
+                    mensaje.value = ''
+                }, 3000)
             })
-        }
-    });
-};
+    }
+}
 
 
 

@@ -14,7 +14,7 @@ class MailController extends Controller
         
 
 
-        Mail::to('hello@example.com')->send(new ContactMail($request->name, $request->email, $request->msg));
+        Mail::to('contacto@nvnwebdesing.com')->send(new ContactMail($request->name, $request->email, $request->msg));
 
 
     }
