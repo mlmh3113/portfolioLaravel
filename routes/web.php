@@ -17,8 +17,7 @@ use Inertia\Inertia;
 // });
 
 Route::get('/', [PortfolioController::class, 'index'] )->name('index');
-Route::post('/send', [MailController::class, 'send'] )->name('send');
-Route::get('/download', [PortfolioController::class, 'pdfDownload'] )->name('download');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
