@@ -1,5 +1,5 @@
 <template>
-    <div id="portfolio" class="py-5 min-h-screen scroll-mt-10" :class="isDark ? 'dark bg-slate-900' : 'text-black bg-slate-300'">
+    <div id="portfolio" class="py-5 min-h-screen md:scroll-mt-10" :class="isDark ? 'dark bg-slate-900' : 'text-black bg-slate-300'">
         <h2 class="text-5xl font-semibold text-center" :class="isDark ? 'dark text-slate-300' : 'text-slate-700'">Proyectos
         </h2>
 

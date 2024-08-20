@@ -1,12 +1,13 @@
 <template>
+
     <Head title="Martin Leandro Martinez" />
-    <Nav></Nav>
-    <Hero></Hero>
-    <About :cursos="cursos"></About>
-    <Portafolio :proyectos="proyectos"></Portafolio>
-    <Contact></Contact>
-    <Footer></Footer>
-    
+    <Nav @darkMode="darkMode" :dark="dark"></Nav>
+    <Hero :dark="dark"></Hero>
+    <About :cursos="cursos" :dark="dark"></About>
+    <Portafolio :proyectos="proyectos" :dark="dark"></Portafolio>
+    <Contact :dark="dark"></Contact>
+    <Footer :dark="dark"></Footer>
+
 </template>
 
 <script setup>
@@ -23,6 +24,34 @@ defineProps({
     proyectos: Object
 })
 
+import { ref } from 'vue';
+
+
+const dark = ref(true)
+
+
+const darkMode = () => {
+    dark.value = !dark.value
+}
+
+
 
 </script>
 
+<style>
+body {
+    font-family: 'Onest', sans-serif;
+    color: black;
+    font-size: larger;
+
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+.dark {
+    color: aliceblue;
+}
+</style>

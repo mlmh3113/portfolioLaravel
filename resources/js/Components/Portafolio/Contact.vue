@@ -1,9 +1,15 @@
 <template>
-    <div id="contact" class="min-h-screen scroll-mt-10"
+    <div id="contact" class="min-h-screen md:scroll-mt-10 flex flex-col "
         :class="isDark ? 'dark bg-gradient-to-br from-gray-800 via-gray-900 to-indigo-950 h-full' : 'bg-slate-200 text-black'">
-        <h3 class="font-bold text-5xl text-center pt-5" :class="isDark ? 'dark text-slate-300' : 'text-slate-700'">Contacto
-        </h3>
+        <div class="">
+                 <h3 class="font-bold text-5xl text-center pt-5" :class="isDark ? 'dark text-slate-300' : 'text-slate-700'">Contacto
+        </h3>  
+        </div>
+ 
         <div class="flex flex-col-reverse mx-auto py-5 md:flex-row md:w-5/6 ">
+
+
+
             <div class="flex mx-auto my-auto">
 
 
@@ -53,7 +59,7 @@
                 </div>
             </div>
 
-            <form @submit.prevent="submit">
+            <form @submit.prevent="submit" class="flex flex-col my-5  mx-auto p-5 gap-3 rounded place-self-center w-96">
                 
                 <div>
                     
@@ -67,7 +73,7 @@
                         required
                       
                         autocomplete="name"
-                        placeholder="Nombre completo"
+                        placeholder="Nombre"
                     />
         
                     <InputError class="mt-2" :message="form.errors.name" />
@@ -96,13 +102,13 @@
         
                     <TextArea
                         id="msg"
-                        class="mt-1 block w-full"
+                        class="mt-1 block w-full text-black"
                         v-model="form.msg"
                         required
                         rows="5"
                         autocomplete="msg"
                         name="msg"
-                        placeholder="¿Como podemos ayudar?"
+                        placeholder="Mensaje"
                     />
         
         
@@ -111,7 +117,7 @@
         
                 <div class="flex items-center justify-end mt-4">
                     <button
-                        class="text-white uppercase py-2 px-6 border-2 border-[#34D6E2] font-bold hover:-translate-y-1 hover:scale-110 duration-500 ease-in-out hover:text-[#34D6E2] hover:border-white">
+                        class="inline-block rounded bg-gradient-to-r from-green-400 to-blue-500 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500">
                         Enviar
                     </button>
                 </div>
@@ -132,6 +138,9 @@ import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import TextArea from '@/Components/TextArea.vue'; 
 import { useForm } from '@inertiajs/vue3';
+import 'sweetalert2/dist/sweetalert2.min.css';
+import Swal from "sweetalert2";
+
 
 
 
@@ -149,20 +158,27 @@ const isDark = computed(() => {
     return props.dark;
 })
 
-
-
 const form = useForm({
     name: '',
     email: '',
     msg: ''  
 });
 
+const submit = () => {
+    form.post(route('send',form), {
+        onSuccess: () => {
+            Swal.fire({
+                
+                icon: 'success',
+                title: 'Tu mensaje ha sido enviado',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+    });
+};
 
 
-
-
-
-const mensaje = ref('')
 
 
 

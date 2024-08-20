@@ -2,7 +2,7 @@
 
 
 
-    <div id="about" class="min-h-screen scroll-mt-10"
+    <div id="about" class="min-h-screen md:scroll-mt-10"
         :class="isDark ? 'dark bg-gradient-to-br from-gray-800 via-gray-900 to-indigo-950 h-full' : 'bg-slate-200 text-black'">
         <div class="flex flex-col gap-9 items-center w-5/6 mx-auto py-5">
             <div class="py-3">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -16,6 +17,7 @@ use Inertia\Inertia;
 // });
 
 Route::get('/', [PortfolioController::class, 'index'] )->name('index');
+Route::post('/send', [MailController::class, 'send'] )->name('send');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
