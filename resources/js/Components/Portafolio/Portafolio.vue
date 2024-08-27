@@ -6,7 +6,7 @@
         <div class="grid mt-5 md:grid-cols-2 md:gap-3 lg:grid-cols-3 p-4 w-5/6 mx-auto"
             :class="isDark ? 'dark' : 'text-black'">
 
-            <div v-for="proyecto in proyectos" class="rounded-lg shadow-2xl overflow-hidden my-4 border border-gray-200"
+            <div v-for="proyecto in proyectos.slice(0, cantidad)" class="rounded-lg shadow-2xl overflow-hidden my-4 border border-gray-200"
                 :class="isDark ? 'dark shadow-blue-900/30' : 'text-black bg-white'"
                 >
                 <div class=" h-30">
@@ -88,7 +88,7 @@ const props = defineProps({
 const mostrarMas = () => {
     toggleMostrar.value = !toggleMostrar.value
     if (toggleMostrar.value == true) {
-        cantidad.value = projects.length
+        cantidad.value = props.proyectos.length
     } else {
         cantidad.value = 3
     }
